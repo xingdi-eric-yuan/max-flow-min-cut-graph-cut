@@ -2,9 +2,10 @@
 =====================
 Implementing Boykov's Max-Flow/Min-Cut segmentation algorithm
 Details see http://www.csd.uwo.ca/~yuri/Papers/pami04.pdf
-*NOT FINISHED*
 
+* NOT FINISHED
 * Nov.11 : Currently using Push–relabel maximum flow algorithm.
+* Nov.12 : Add Mouse Draw 
 
 ###Compile & Run
 

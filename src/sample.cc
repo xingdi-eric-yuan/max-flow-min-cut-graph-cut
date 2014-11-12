@@ -2,9 +2,13 @@
 using namespace cv;
 using namespace std;
 
+Mat img;
+bool DO_DRAW = false;
+vector<Point> contour;
+
 void
 run(){
-
+/*
     int node_amount = 6;
     Graph g;
     for(int i = 0; i < node_amount; i++){
@@ -28,6 +32,40 @@ run(){
     for(int i = 0; i < min_cut.size(); i++){
         cout<<"from "<<min_cut[i]._from<<" to "<<min_cut[i]._to<<endl;
     }
+    */
+   
+    img = imread("baboon.jpg", CV_LOAD_IMAGE_GRAYSCALE);
+    img.convertTo(img, CV_64FC1, 1.0/255.0, 0);
+
+    Mat imgshow;
+    img.copyTo(imgshow);
+
+    const string winName = "image";
+    namedWindow( winName, CV_WINDOW_AUTOSIZE );
+    imshow(winName, imgshow);
+    setMouseCallback( winName, onMouse, 0);
+    int key;
+    do{
+        key = waitKey(0);
+        switch((char)key){
+            case 'p':
+                for(int i = 0; i < contour.size(); i++){
+                    cout<<"x = "<<contour[i].x<<", y = "<<contour[i].y<<endl;
+                }
+                break;
+            case 'd':
+                for(int i = 0; i < contour.size(); i++){
+                    circle(imgshow, contour[i], 2, Scalar(0,0,0), 2); 
+                    imshow(winName, imgshow);
+                }
+                break;
+        }
+    }while (key > 0 && key != 27);
+    destroyWindow(winName);
+    cout<<"contour.size = "<<contour.size()<<endl;
+    removeContourDuplicate(contour);
+    cout<<"contour.size = "<<contour.size()<<endl;
+
 }
 
 int 

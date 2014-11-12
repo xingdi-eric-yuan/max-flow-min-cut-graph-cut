@@ -7,6 +7,8 @@
 #include "opencv2/highgui/highgui.hpp"
 #include "data_structure.h"
 #include "graph.h"
+#include "helper.h"
+#include "mouse_draw.h"
 
 #define ATD at<double>
 #define AT3D at<cv::Vec3d>
@@ -15,3 +17,7 @@
 
 using namespace std;
 using namespace cv;
+
+extern Mat img;
+extern bool DO_DRAW;
+extern vector<Point> contour;
