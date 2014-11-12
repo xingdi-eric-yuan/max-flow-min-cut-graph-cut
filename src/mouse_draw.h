@@ -5,3 +5,4 @@ using namespace std;
 using namespace cv;
 
 void onMouse(int, int, int, int, void*);
+vector<Point> getMousePoints(const Mat&);

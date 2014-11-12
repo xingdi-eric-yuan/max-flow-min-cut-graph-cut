@@ -18,6 +18,6 @@
 using namespace std;
 using namespace cv;
 
-extern Mat img;
+//extern Mat img;
 extern bool DO_DRAW;
 extern vector<Point> contour;
