@@ -5,7 +5,8 @@ Details see http://www.csd.uwo.ca/~yuri/Papers/pami04.pdf
 
 * NOT FINISHED
 * Nov.11 : Currently using Push–relabel maximum flow algorithm.
-* Nov.12 : Add Mouse Draw 
+* Nov.12 : Add Mouse Draw.
+* Nov.12 : Combine max-flow/min-cut with image segmentation.
 
 ###Compile & Run
 
