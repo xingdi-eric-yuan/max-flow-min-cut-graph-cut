@@ -96,8 +96,8 @@ void addSpecificEdges(Graph &g, const Mat& img, const vector<Point>& vec, int ve
 vector<Point> getSegment(const Mat& img, const vector<Point> &fore, const vector<Point> &back){
     int height = img.rows;
     int width = img.cols;
-    double source_capacity = 10.0;
-    double sink_capacity = 10.0;
+    double source_capacity = 100.0;
+    double sink_capacity = 100.0;
     vector<Point> res;
 
     Graph g;

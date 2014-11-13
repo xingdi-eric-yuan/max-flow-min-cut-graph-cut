@@ -26,24 +26,27 @@ void addEdge(Graph &g, int i, int j, double w, double revw){
     if(i == j) return;
     if(w < 0 || revw < 0) return;
 
+    string which_edge = getEdgeId(i, j);
+    string which_edge_rev = getEdgeId(j, i);
+
     Edge ij, ji;
     ij._from = i;
     ij._to = j;
     ij.capacities = w;
     ij.flow = 0.0;
-    g.edges.push_back(ij);
+    g.edges[which_edge] = ij;
 
     ji._from = j;
     ji._to = i;
     ji.capacities = revw;
     ji.flow = 0.0;
-    g.edges.push_back(ji);
+    g.edges[which_edge_rev] = ji;
 }
 
 void printEdges(Graph &g){
     cout<<"All Edges..."<<endl;
-    for(int i = 0; i < g.edges.size(); i++){
-        cout<<"from "<<g.edges[i]._from<<" to "<<g.edges[i]._to<<", capa = "<<g.edges[i].capacities<<", flow = "<<g.edges[i].flow<<endl;
+    for(unordered_map<string, Edge> :: const_iterator iter = g.edges.begin(); iter != g.edges.end(); iter++){
+        cout<<"from "<<iter -> second._from<<" to "<<iter -> second._to<<", capa = "<<iter -> second.capacities<<", flow = "<<iter -> second.flow<<endl;
     }
 }
 
@@ -74,18 +77,15 @@ double getExcess(const Graph &g, int vtx_id){
     return g.vertices[vtx_id].excess;
 }
 
-int getEdgeId(const Graph &g, int from, int to){
-    if(from == to) return -1;
-    for(int i = 0; i < g.edges.size(); i++){
-        if(g.edges[i]._from == from && g.edges[i]._to == to) return i;
-    }
-    return -1;
+string getEdgeId(int from, int to){
+    if(from == to) return "equal";
+    return to_string(from) + "," + to_string(to);
 }
 
 void push(Graph &g, int from, int to){
-    int which_edge = getEdgeId(g, from, to);
-    int which_edge_rev = getEdgeId(g, to, from);
-    if(which_edge == -1) return;
+    string which_edge = getEdgeId(from, to);
+    string which_edge_rev = getEdgeId(to, from);
+    if(g.edges.find(which_edge) == g.edges.end()) return;
     double send = getMin(g.vertices[from].excess, g.edges[which_edge].capacities - g.edges[which_edge].flow);
     g.edges[which_edge].flow += send;
     g.edges[which_edge_rev].flow -= send;
@@ -96,8 +96,8 @@ void push(Graph &g, int from, int to){
 void relabel(Graph &g, int node_id){
     int min_height = INT_MAX;
     for(int i = 0; i < g.vertices.size(); i++){
-        int which_edge = getEdgeId(g, node_id, i);
-        if(which_edge == -1) continue;
+        string which_edge = getEdgeId(node_id, i);
+        if(g.edges.find(which_edge) == g.edges.end()) continue;
         if(g.edges[which_edge].capacities - g.edges[which_edge].flow > 0){
             min_height = getMin(min_height, g.vertices[i].height);
             g.vertices[node_id].height = min_height + 1;
@@ -116,8 +116,8 @@ void discharge(Graph &g, int node_id){
     while(g.vertices[node_id].excess > 0){
         if(g.vertices[node_id].seen < g.vertices.size()){
             int v = g.vertices[node_id].seen;
-            int which_edge = getEdgeId(g, node_id, v); 
-            if(which_edge >= 0 && 
+            string which_edge = getEdgeId(node_id, v); 
+            if(g.edges.find(which_edge) != g.edges.end() && 
                g.edges[which_edge].capacities - g.edges[which_edge].flow > 0 && 
                g.vertices[node_id].height > g.vertices[v].height){
                 push(g, node_id, v);
@@ -159,8 +159,8 @@ double pushRelabel(Graph &g, int source_id, int sink_id){
 
     double maxFlow = 0.0;
     for(int i = 0; i < g.vertices.size(); i++){
-        int which_edge = getEdgeId(g, source_id, i); 
-        if(which_edge == -1) continue;
+        string which_edge = getEdgeId(source_id, i);
+        if(g.edges.find(which_edge) == g.edges.end()) continue;
         maxFlow += g.edges[which_edge].flow;
     }
     List.clear();
@@ -183,9 +183,10 @@ vector<Edge> getMinCut(Graph &g, int source_id){
         S.pop();
         for(int i = 0; i < g.vertices.size(); i++){
             if(i == p) continue;
-            int which_edge = getEdgeId(g, p, i); 
-            int which_edge_rev = getEdgeId(g, i, p); 
-            if(which_edge == -1 || which_edge_rev == -1) continue;
+
+            string which_edge = getEdgeId(p, i);
+            string which_edge_rev = getEdgeId(i, p);
+            if(g.edges.find(which_edge) == g.edges.end()) continue;
             if(g.edges[which_edge].capacities == g.edges[which_edge].flow ||
                g.edges[which_edge_rev].capacities == g.edges[which_edge_rev].flow) continue;
             if(visited.count(i) == 0) S.push(i);
@@ -195,13 +196,13 @@ vector<Edge> getMinCut(Graph &g, int source_id){
     }
     // The cut consists of all edges that go from a marked to an unmarked vertex.
     vector<Edge> res;
-    for(int i = 0; i < g.edges.size(); i++){
-        int from = g.edges[i]._from;
-        int to = g.edges[i]._to;
+    for(unordered_map<string, Edge>::const_iterator iter = g.edges.begin(); iter != g.edges.end(); iter++){
+        int from = iter -> second._from;
+        int to = iter -> second._to;
         if(true == g.vertices[from].marked && false == g.vertices[to].marked){
-            res.push_back(g.edges[i]);
+            res.push_back(iter -> second);
         }
-    }    
+    }  
     return res;
 }
 

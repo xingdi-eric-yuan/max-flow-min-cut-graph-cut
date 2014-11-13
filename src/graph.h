@@ -13,7 +13,7 @@ void setHeight(Graph&, int, int);
 int getHeight(const Graph&, int);
 void setExcess(Graph&, int, double);
 double getExcess(const Graph&, int);
-int getEdgeId(const Graph&, int, int);
+string getEdgeId(int, int);
 void push(Graph&, int, int);
 void relabel(Graph&, int);
 void moveToFront(vector<int>&, int);

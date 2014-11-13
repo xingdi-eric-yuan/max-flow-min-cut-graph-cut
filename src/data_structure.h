@@ -21,6 +21,6 @@ struct Edge{
 struct Graph{
 
     vector<Vertex> vertices;
-    vector<Edge> edges;
+    unordered_map<string, Edge> edges;
     double flow;
 };
