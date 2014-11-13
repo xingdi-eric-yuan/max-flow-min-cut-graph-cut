@@ -28,6 +28,7 @@ void addEdge(Graph &g, int i, int j, double w, double revw){
 
     string which_edge = getEdgeId(i, j);
     string which_edge_rev = getEdgeId(j, i);
+    if(g.edges.find(which_edge) != g.edges.end()) return;
 
     Edge ij, ji;
     ij._from = i;

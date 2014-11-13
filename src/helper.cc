@@ -28,9 +28,8 @@ int point2index(const Mat &img, int x, int y){
 }
 
 Point index2point(const Mat &img, int ind){
-    int x, y;
-    y = ind / img.cols;
-    x = ind % img.cols;
+    int y = ind / img.cols;
+    int x = ind % img.cols;
     return Point(x, y);
 }
 
@@ -43,7 +42,7 @@ bool isInsideImage(const Mat &img, const Point &pt){
 }
 
 double getEdgeCapacity(const Mat &img, int x1, int y1, int x2, int y2){
-    return - log(fabs(img.ATD(y1, x1) - img.ATD(y2, x2)));
+    return - log(fabs(img.ATD(y1, x1) - img.ATD(y2, x2))) + 1;
 }
 
 void image2Graph(Graph &g, const Mat &img){
@@ -91,6 +90,12 @@ void addSpecificEdges(Graph &g, const Mat& img, const vector<Point>& vec, int ve
         int index = point2index(img, vec[i]);
         addEdge(g, index, vertex, capacity, capacity);
     }
+    for(int i = 0; i < img.rows * img.cols; i++){
+        string which_edge = getEdgeId(vertex, i);
+        if(g.edges.find(which_edge) == g.edges.end()){
+            addEdge(g, i, vertex, 1.0, 1.0);
+        }
+    }
 }
 
 vector<Point> getSegment(const Mat& img, const vector<Point> &fore, const vector<Point> &back){
@@ -105,16 +110,18 @@ vector<Point> getSegment(const Mat& img, const vector<Point> &fore, const vector
     for(int i = 0; i < node_amount; i++){
         int tmp = addVertex(g);
     }
+    int source_id = node_amount - 2;
+    int sink_id = node_amount - 1;
     initVertices(g);
     image2Graph(g, img);
-    addSpecificEdges(g, img, fore, node_amount - 2, source_capacity);
-    addSpecificEdges(g, img, back, node_amount - 1, sink_capacity);
+    addSpecificEdges(g, img, fore, source_id, source_capacity);
+    addSpecificEdges(g, img, back, sink_id, sink_capacity);
 
     cout<<"Successfully create graph. There're totally "<<g.vertices.size()<<" vertices and "<<g.edges.size()<<" edges"<<endl;
-
-    double max_flow = pushRelabel(g, node_amount - 2, node_amount - 1);
+    double max_flow = pushRelabel(g, source_id, sink_id);
     cout<<"Max flow = "<<max_flow<<endl;
-    vector<Edge> min_cut = getMinCut(g, node_amount - 2);
+    vector<Edge> min_cut = getMinCut(g, source_id);
+    cout<<"One of the min-cut contains "<<min_cut.size()<<" of edges"<<endl;
     for(int i = 0; i < min_cut.size(); i++){
         Point from = index2point(img, min_cut[i]._from);
         Point to = index2point(img, min_cut[i]._to);

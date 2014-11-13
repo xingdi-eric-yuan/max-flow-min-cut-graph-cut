@@ -9,6 +9,7 @@ vector<Point> contour;
 void
 run(){
 
+/*
     int node_amount = 6;
     Graph g;
     for(int i = 0; i < node_amount; i++){
@@ -33,11 +34,12 @@ run(){
     for(int i = 0; i < min_cut.size(); i++){
         cout<<"from "<<min_cut[i]._from<<" to "<<min_cut[i]._to<<endl;
     }
+    */
     
-    
-   /*
-    // Mat img = imread("baboon_tiny.jpg", CV_LOAD_IMAGE_GRAYSCALE);
-    Mat img = imread("baboon.jpg", CV_LOAD_IMAGE_GRAYSCALE);
+   
+    Mat img = imread("ball.jpeg", CV_LOAD_IMAGE_GRAYSCALE);
+    //Mat img = imread("baboon_tiny.jpg", CV_LOAD_IMAGE_GRAYSCALE);
+    //Mat img = imread("baboon.jpg", CV_LOAD_IMAGE_GRAYSCALE);
     Mat resimg;
     cvtColor(img, resimg, CV_GRAY2RGB);
 
@@ -54,11 +56,11 @@ run(){
     cout<<seg.size()<<endl;
 
     for(int i = 0; i < seg.size(); i++){
-        circle(resimg, seg[i], 2, Scalar(0, 0, 255), 2); 
+        circle(resimg, seg[i], 2, Scalar(0, 0, 255), 1); 
     }
     imshow("Result", resimg);
     waitKey(0);
-*/
+
 }
 
 int 

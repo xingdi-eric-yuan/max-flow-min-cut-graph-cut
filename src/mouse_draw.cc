@@ -47,7 +47,7 @@ vector<Point> getMousePoints(const Mat &img){
                 break;
             case 'd':
                 for(int i = 0; i < contour.size(); i++){
-                    circle(imgshow, contour[i], 2, Scalar(0, 0, 255), 2); 
+                    circle(imgshow, contour[i], 2, Scalar(0, 0, 255), 1); 
                 }
                 imshow(winName, imgshow);
                 break;
