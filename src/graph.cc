@@ -132,7 +132,7 @@ void discharge(Graph &g, int node_id){
 double pushRelabel(Graph &g, int source_id, int sink_id){
 
     setHeight(g, source_id, g.vertices.size());
-    setExcess(g, source_id, INT_MAX);
+    setExcess(g, source_id, numeric_limits<double>::max());
 
     vector<int> List;
     for(int i = 0; i < g.vertices.size(); i++){

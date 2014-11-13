@@ -34,8 +34,10 @@ run(){
     }
     */
    
+    // Mat img = imread("baboon_tiny.jpg", CV_LOAD_IMAGE_GRAYSCALE);
     Mat img = imread("baboon.jpg", CV_LOAD_IMAGE_GRAYSCALE);
-    //img.convertTo(img, CV_64FC1, 1.0/255.0, 0);
+    Mat resimg;
+    cvtColor(img, resimg, CV_GRAY2RGB);
 
     cout<<"Foreground please..."<<endl;
     vector<Point> foreground_pts = getMousePoints(img);
@@ -44,6 +46,16 @@ run(){
     cout<<"Background please..."<<endl;
     vector<Point> background_pts = getMousePoints(img);
     cout<<"There are totally "<<background_pts.size()<<" background points."<<endl;
+
+    img.convertTo(img, CV_64FC1, 1.0/255.0, 0);
+    vector<Point> seg = getSegment(img, foreground_pts, background_pts);
+    cout<<seg.size()<<endl;
+
+    for(int i = 0; i < seg.size(); i++){
+        circle(resimg, seg[i], 2, Scalar(0, 0, 255), 2); 
+    }
+    imshow("Result", resimg);
+    waitKey(0);
 
 }
 
