@@ -20,7 +20,31 @@ int addVertex(Graph &g){
     return g.vertices.size() - 1;
 }
 
-void addEdge(Graph &g, int i, int j, double w, double revw){
+void addEdge(Graph &g, int i, int j, double w){
+    if(i >= g.vertices.size() || i < 0) return;
+    if(j >= g.vertices.size() || j < 0) return;
+    if(i == j) return;
+    if(w < 0) return;
+
+    string which_edge = getEdgeId(i, j);
+    string which_edge_rev = getEdgeId(j, i);
+    if(g.edges.find(which_edge) != g.edges.end()) return;
+
+    Edge ij, ji;
+    ij._from = i;
+    ij._to = j;
+    ij.capacities = w;
+    ij.flow = 0.0;
+    g.edges[which_edge] = ij;
+
+    ji._from = j;
+    ji._to = i;
+    ji.capacities = w;
+    ji.flow = 0.0;
+    g.edges[which_edge_rev] = ji;
+}
+
+void addSingleEdge(Graph &g, int i, int j, double w, double revw){
     if(i >= g.vertices.size() || i < 0) return;
     if(j >= g.vertices.size() || j < 0) return;
     if(i == j) return;
@@ -43,6 +67,7 @@ void addEdge(Graph &g, int i, int j, double w, double revw){
     ji.flow = 0.0;
     g.edges[which_edge_rev] = ji;
 }
+
 
 void printEdges(Graph &g){
     cout<<"All Edges..."<<endl;
@@ -200,7 +225,8 @@ vector<Edge> getMinCut(Graph &g, int source_id){
     for(unordered_map<string, Edge>::const_iterator iter = g.edges.begin(); iter != g.edges.end(); iter++){
         int from = iter -> second._from;
         int to = iter -> second._to;
-        if(true == g.vertices[from].marked && false == g.vertices[to].marked){
+        cout<<"--- from = "<<from<<", to = "<<to<<", "<<g.vertices[from].marked<<", "<<g.vertices[to].marked<<endl;
+        if((true == g.vertices[from].marked) && (false == g.vertices[to].marked)){
             res.push_back(iter -> second);
         }
     }  

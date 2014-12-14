@@ -42,7 +42,8 @@ bool isInsideImage(const Mat &img, const Point &pt){
 }
 
 double getEdgeCapacity(const Mat &img, int x1, int y1, int x2, int y2){
-    return - log(fabs(img.ATD(y1, x1) - img.ATD(y2, x2))) + 1;
+//    return (- log(fabs(img.ATD(y1, x1) - img.ATD(y2, x2))) + 1) * 20;
+    return fabs(img.ATD(y1, x1) - img.ATD(y2, x2)) + 1e-2;
 }
 
 void image2Graph(Graph &g, const Mat &img){
@@ -50,35 +51,33 @@ void image2Graph(Graph &g, const Mat &img){
     for(int i = 0; i < img.rows; i++){
         for(int j = 0; j < img.cols; j++){
             int index = point2index(img, j, i);
-            // 8 neighbors
-            /*
+            /* // 8 neighbors
             for(int m = -1; m <= 1; m++){
                 for(int n = -1; n <= 1; n++){
                     if(m != 0 || n != 0){
                         if(isInsideImage(img, j + m, i + n)){
                             double capa = getEdgeCapacity(img, j, i, j + m, i + n);
-                            addEdge(g, index, point2index(img, j + m, i + n), capa, capa);
+                            addEdge(g, index, point2index(img, j + m, i + n), capa);
                         }
                     } 
                 }
-            }
-            */
+            }*/
             // 4 neighbors
             if(isInsideImage(img, j - 1, i)){
                 double capa = getEdgeCapacity(img, j, i, j - 1, i);
-                addEdge(g, index, point2index(img, j - 1, i), capa, capa);
+                addEdge(g, index, point2index(img, j - 1, i), capa);
             }
             if(isInsideImage(img, j + 1, i)){
                 double capa = getEdgeCapacity(img, j, i, j + 1, i);
-                addEdge(g, index, point2index(img, j + 1, i), capa, capa);
+                addEdge(g, index, point2index(img, j + 1, i), capa);
             }
             if(isInsideImage(img, j, i - 1)){
                 double capa = getEdgeCapacity(img, j, i, j, i - 1);
-                addEdge(g, index, point2index(img, j, i - 1), capa, capa);
+                addEdge(g, index, point2index(img, j, i - 1), capa);
             }
             if(isInsideImage(img, j, i + 1)){
                 double capa = getEdgeCapacity(img, j, i, j, i + 1);
-                addEdge(g, index, point2index(img, j, i + 1), capa, capa);
+                addEdge(g, index, point2index(img, j, i + 1), capa);
             }
         }
     }
@@ -88,21 +87,22 @@ void addSpecificEdges(Graph &g, const Mat& img, const vector<Point>& vec, int ve
     for(int i = 0; i < vec.size(); i++){
         if(!isInsideImage(img, vec[i])) continue;
         int index = point2index(img, vec[i]);
-        addEdge(g, index, vertex, capacity, capacity);
+        addEdge(g, index, vertex, capacity);
     }
+    /*
     for(int i = 0; i < img.rows * img.cols; i++){
         string which_edge = getEdgeId(vertex, i);
         if(g.edges.find(which_edge) == g.edges.end()){
-            addEdge(g, i, vertex, 1.0, 1.0);
+            addEdge(g, i, vertex, 10.0);
         }
-    }
+    }*/
 }
 
 vector<Point> getSegment(const Mat& img, const vector<Point> &fore, const vector<Point> &back){
     int height = img.rows;
     int width = img.cols;
-    double source_capacity = 100.0;
-    double sink_capacity = 100.0;
+    double source_capacity = 9e99;
+    double sink_capacity = 9e99;
     vector<Point> res;
 
     Graph g;
