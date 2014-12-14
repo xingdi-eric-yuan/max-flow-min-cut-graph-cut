@@ -43,7 +43,7 @@ bool isInsideImage(const Mat &img, const Point &pt){
 
 double getEdgeCapacity(const Mat &img, int x1, int y1, int x2, int y2){
 //    return (- log(fabs(img.ATD(y1, x1) - img.ATD(y2, x2))) + 1) * 20;
-    return fabs(img.ATD(y1, x1) - img.ATD(y2, x2)) + 1e-2;
+    return fabs(img.ATD(y1, x1) - img.ATD(y2, x2)) * 255.0 + 1e-2;
 }
 
 void image2Graph(Graph &g, const Mat &img){

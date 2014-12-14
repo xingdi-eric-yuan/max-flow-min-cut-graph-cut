@@ -9,7 +9,7 @@ vector<Point> contour;
 void
 run(){
 
-
+/*
     int node_amount = 6;
     Graph g;
     for(int i = 0; i < node_amount; i++){
@@ -28,6 +28,9 @@ run(){
     cout<<max_flow<<endl;
 
     vector<Edge> min_cut = getMinCut(g, 0);
+    for(int i = 0; i < min_cut.size(); i++){
+        cout<<"from "<<min_cut[i]._from<<" to "<<min_cut[i]._to<<endl;
+    }*/
 
 /*
     int node_amount = 6;
@@ -48,17 +51,15 @@ run(){
     cout<<max_flow<<endl;
 
     vector<Edge> min_cut = getMinCut(g, 0);
-*/
-
-
     for(int i = 0; i < min_cut.size(); i++){
         cout<<"from "<<min_cut[i]._from<<" to "<<min_cut[i]._to<<endl;
-    }
+    }*/
+
     
-   /*
+   
     //Mat img = imread("ball.jpeg", CV_LOAD_IMAGE_GRAYSCALE);
-    //Mat img = imread("baboon_tiny.jpg", CV_LOAD_IMAGE_GRAYSCALE);
-    Mat img = imread("baboon.jpg", CV_LOAD_IMAGE_GRAYSCALE);
+    Mat img = imread("baboon_tiny.jpg", CV_LOAD_IMAGE_GRAYSCALE);
+    //Mat img = imread("baboon.jpg", CV_LOAD_IMAGE_GRAYSCALE);
     Mat resimg;
     cvtColor(img, resimg, CV_GRAY2RGB);
 
@@ -79,7 +80,7 @@ run(){
     }
     imshow("Result", resimg);
     waitKey(0);
-*/
+
 }
 
 int 
