@@ -8,6 +8,8 @@ void initVertices(Graph&);
 int addVertex(Graph&);
 void addEdge(Graph&, int, int, double);
 void addSingleEdge(Graph&, int, int, double, double);
+void addSingleEdge(Graph&, int, int, double);
+void setFlow(Graph&, int, int, double);
 void printEdges(Graph&);
 void printVertices(Graph&);
 void setHeight(Graph&, int, int);

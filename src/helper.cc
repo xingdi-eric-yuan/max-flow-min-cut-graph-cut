@@ -13,7 +13,6 @@ void removeContourDuplicate(vector<Point> &vec){
             set.insert(tmp);
         }
     }
-
     swap(vec, newvec);
     newvec.clear();
     set.clear();
@@ -43,43 +42,31 @@ bool isInsideImage(const Mat &img, const Point &pt){
 
 double getEdgeCapacity(const Mat &img, int x1, int y1, int x2, int y2){
 //    return (- log(fabs(img.ATD(y1, x1) - img.ATD(y2, x2))) + 1) * 20;
-    return fabs(img.ATD(y1, x1) - img.ATD(y2, x2)) * 255.0 + 1e-2;
+    return fabs(img.ATD(y1, x1) - img.ATD(y2, x2)) + 1e-2;
 }
 
 void image2Graph(Graph &g, const Mat &img){
 
-    for(int i = 0; i < img.rows; i++){
-        for(int j = 0; j < img.cols; j++){
+    for(int i = 0; i < img.rows - 1; i++){
+        for(int j = 0; j < img.cols - 1; j++){
             int index = point2index(img, j, i);
-            /* // 8 neighbors
-            for(int m = -1; m <= 1; m++){
-                for(int n = -1; n <= 1; n++){
-                    if(m != 0 || n != 0){
-                        if(isInsideImage(img, j + m, i + n)){
-                            double capa = getEdgeCapacity(img, j, i, j + m, i + n);
-                            addEdge(g, index, point2index(img, j + m, i + n), capa);
-                        }
-                    } 
-                }
-            }*/
             // 4 neighbors
-            if(isInsideImage(img, j - 1, i)){
-                double capa = getEdgeCapacity(img, j, i, j - 1, i);
-                addEdge(g, index, point2index(img, j - 1, i), capa);
-            }
-            if(isInsideImage(img, j + 1, i)){
-                double capa = getEdgeCapacity(img, j, i, j + 1, i);
-                addEdge(g, index, point2index(img, j + 1, i), capa);
-            }
-            if(isInsideImage(img, j, i - 1)){
-                double capa = getEdgeCapacity(img, j, i, j, i - 1);
-                addEdge(g, index, point2index(img, j, i - 1), capa);
-            }
-            if(isInsideImage(img, j, i + 1)){
-                double capa = getEdgeCapacity(img, j, i, j, i + 1);
-                addEdge(g, index, point2index(img, j, i + 1), capa);
-            }
+            double capa = 0.0;
+            capa = getEdgeCapacity(img, j, i, j + 1, i);
+            addEdge(g, index, point2index(img, j + 1, i), capa);
+            capa = getEdgeCapacity(img, j, i, j, i + 1);
+            addEdge(g, index, point2index(img, j, i + 1), capa);
         }
+    }
+    for(int i = 0; i < img.rows - 1; i++){
+        int index = point2index(img, img.cols - 1, i);
+        double capa = getEdgeCapacity(img, img.cols - 1, i, img.cols - 1, i + 1);
+        addEdge(g, index, point2index(img, img.cols - 1, i + 1), capa);
+    }
+    for(int i = 0; i < img.cols - 1; i++){
+        int index = point2index(img, i, img.rows - 1);
+        double capa = getEdgeCapacity(img, i, img.rows - 1, i + 1, img.rows - 1);
+        addEdge(g, index, point2index(img, i + 1, img.rows - 1), capa);
     }
 }
 
@@ -89,13 +76,6 @@ void addSpecificEdges(Graph &g, const Mat& img, const vector<Point>& vec, int ve
         int index = point2index(img, vec[i]);
         addEdge(g, index, vertex, capacity);
     }
-    /*
-    for(int i = 0; i < img.rows * img.cols; i++){
-        string which_edge = getEdgeId(vertex, i);
-        if(g.edges.find(which_edge) == g.edges.end()){
-            addEdge(g, i, vertex, 10.0);
-        }
-    }*/
 }
 
 vector<Point> getSegment(const Mat& img, const vector<Point> &fore, const vector<Point> &back){
@@ -118,6 +98,13 @@ vector<Point> getSegment(const Mat& img, const vector<Point> &fore, const vector
     addSpecificEdges(g, img, back, sink_id, sink_capacity);
 
     cout<<"Successfully create graph. There're totally "<<g.vertices.size()<<" vertices and "<<g.edges.size()<<" edges"<<endl;
+    
+
+    //cout<<"////////////////////"<<endl;
+    //printEdges(g);
+
+
+
     double max_flow = pushRelabel(g, source_id, sink_id);
     cout<<"Max flow = "<<max_flow<<endl;
     vector<Edge> min_cut = getMinCut(g, source_id);
@@ -130,5 +117,6 @@ vector<Point> getSegment(const Mat& img, const vector<Point> &fore, const vector
             res.push_back(to);
         }
     }
+    
     return res;
 }

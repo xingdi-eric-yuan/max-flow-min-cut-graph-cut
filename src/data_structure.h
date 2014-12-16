@@ -4,18 +4,19 @@
 using namespace std;
 using namespace cv;
 
-struct Vertex{
-    int height;
-    double excess;
-    int seen;
-    bool marked;
-};
-
 struct Edge{
     int _from;
     int _to;
     double capacities;
     double flow;
+};
+
+struct Vertex{
+    int height;
+    double excess;
+    int seen;
+    bool marked;
+    vector<Edge*> adj_edges;
 };
 
 struct Graph{
